@@ -36,6 +36,8 @@ set(SOURCE_FILES
         src/server/managment/MainFlow.h
         src/server/managment/ProperInput.cpp
         src/server/managment/ProperInput.h
+        src/server/managment/DataSender.cpp
+        src/server/managment/DataSender.h
 
         src/server/taxi/LuxuryCab.cpp
         src/server/taxi/LuxuryCab.h
@@ -56,10 +58,10 @@ set(SOURCE_FILES
 
         src/server/sockets/Socket.cpp
         src/server/sockets/Socket.h
+        src/server/sockets/Tcp.cpp
+        src/server/sockets/Tcp.h
         src/server/sockets/Udp.cpp
         src/server/sockets/Udp.h
-        src/server/managment/DataSender.cpp
-        src/server/managment/DataSender.h
 
         src/server/listeners/SetTripListener.cpp
         src/server/listeners/SetTripListener.h)

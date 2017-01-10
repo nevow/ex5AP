@@ -7,6 +7,7 @@
 #include "../server/tripOperations/Driver.h"
 #include "../server/enum/MartialStatuesFactory.h"
 #include "../server/managment/DataSender.cpp"
+#include "../server/sockets/Tcp.h"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ int main(int argc, char *argv[]) {
     // put the port
     int portNumber = atoi(argv[2]);
     // create a socket for transferring data between the server and the client
-    Socket *sock = new Udp(0, portNumber);
+    Socket *sock = new Tcp(0, portNumber);
     sock->initialize();
 
     // get a driver with user input

@@ -4,6 +4,7 @@
 
 #include "MainFlow.h"
 #include "DataSender.cpp"
+#include "../sockets/Tcp.h"
 
 using namespace std;
 
@@ -15,7 +16,7 @@ MainFlow::MainFlow(int ip) {
     int rows, columns, obstacleNum;
 
     // creates a socket for connection with the client
-    sock = new Udp(1, ip);
+    sock = new Tcp(1, ip);
     sock->initialize();
 
     // get the map's size and create it
