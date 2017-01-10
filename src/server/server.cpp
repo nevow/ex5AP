@@ -10,4 +10,5 @@ int main(int argc, char *argv[]) {
     mf->input();
     delete (mf);
     return 0;
+
 }
