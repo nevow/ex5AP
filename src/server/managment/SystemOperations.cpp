@@ -5,6 +5,11 @@
 #include "SystemOperations.h"
 #include "BFS.h"
 
+struct ThreadArgs {
+    Map *grid;
+    TripInfo *ti;
+};
+
 /**
  * constructor.
  * @param map1 the map to do on it the operations
@@ -64,17 +69,20 @@ void SystemOperations::addObstacle(Point obstacle) {
  * @param tripInfo is the TripInfo to add to the taxi center
  */
 void SystemOperations::addTI(TripInfo *tripInfo) {
-    Node *start = new Node(tripInfo->getStart());
-    Point *end = (tripInfo->getDestination());
-    CoordinatedItem *dest = map->getCoordinatedItem(end->getX(), end->getY());
-    std::list<CoordinatedItem *> *road = BFS::use(map, start, dest);
-    delete start;
-    tripInfo->setRoad(road);
-    tc->addTI(tripInfo);
+    //pthread_t t1;
+    ThreadArgs *threadArgs = new ThreadArgs();
+    threadArgs->ti = tripInfo;
+    threadArgs->grid = map;
+    int status = pthread_create(&t1, NULL, ComputeRoad, (void *) threadArgs);
+    if (!status) {
+        tc->addTI(tripInfo);
+    } else {
+        std::cout << "ComputeRoad fails" << endl;
+    }
 }
 
 /**
- * @param id is the id od the driver
+ * @param id is the id of the driver
  * @return the Point of the driver from the taxiCenter
  */
 Point *SystemOperations::getDriverLocation(int id) {
@@ -85,5 +93,18 @@ Point *SystemOperations::getDriverLocation(int id) {
  * move all the taxi by call Taxi Center's "moveAll"
  */
 void SystemOperations::moveAll() {
+    pthread_join(t1,NULL);
     tc->moveAll();
+}
+
+void *SystemOperations::ComputeRoad(void *threadArgs) {
+    ThreadArgs *args = (ThreadArgs *) threadArgs;
+    Node *start = new Node(args->ti->getStart());
+    Point *end = (args->ti->getDestination());
+    CoordinatedItem *dest = args->grid->getCoordinatedItem(end->getX(), end->getY());
+    std::list<CoordinatedItem *> *road = BFS::use(args->grid, start, dest);
+    delete start;
+    args->ti->setRoad(road);
+    delete (threadArgs);
+    pthread_exit(0);
 }

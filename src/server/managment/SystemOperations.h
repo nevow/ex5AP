@@ -21,6 +21,7 @@ private:
     list<Node *> *obstacles;
     TaxiCenter *tc;
     Map *map;
+    pthread_t t1;
 
 public:
 
@@ -51,6 +52,8 @@ public:
     Point *getDriverLocation(int id);
 
     void moveAll();
+
+    static void* ComputeRoad(void *tripInfo);
 };
 
 

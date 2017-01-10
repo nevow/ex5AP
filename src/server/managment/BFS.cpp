@@ -5,6 +5,9 @@
 
 #include <queue>
 #include "BFS.h"
+#include <mutex>
+
+std::mutex mtx;           // mutex for critical section
 
 /**
  * @param Graph that the algorithm run on
@@ -14,6 +17,7 @@
  */
 list<CoordinatedItem *> *BFS::use(Grid *Graph, CoordinatedItem *root, CoordinatedItem *dest) {
     // spread the distances using the BFS algorithm
+    mtx.lock();
     BFS::BFSAlgo(Graph, root);
     return (getTrip(dest));
 }
@@ -76,5 +80,6 @@ list<CoordinatedItem *> *BFS::getTrip(CoordinatedItem *dest) {
     }
     road->pop_front();
     road->front()->setParent(NULL);
+    mtx.unlock();
     return road;
 }

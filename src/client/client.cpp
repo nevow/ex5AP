@@ -14,9 +14,6 @@ using namespace std;
 int main(int argc, char *argv[]) {
     // put the port
     int portNumber = atoi(argv[2]);
-    // create a socket for transferring data between the server and the client
-    Socket *sock = new Tcp(0, portNumber);
-    sock->initialize();
 
     // get a driver with user input
     int id, age, experience, vehicleId;
@@ -30,6 +27,10 @@ int main(int argc, char *argv[]) {
     vehicleId = ProperInput::validInt();
     cin.ignore();
     char buffer[50];
+
+    // create a socket for transferring data between the server and the client
+    Socket *sock = new Tcp(0, portNumber);
+    sock->initialize();
 
     // create a driver with the user input
     Driver *driver = new Driver(id, age, MartialStatuesFactory::getMartialStatus(status),
@@ -46,6 +47,8 @@ int main(int argc, char *argv[]) {
     // do while the server still sends orders different from the exit order "exit"
     do {
         sock->receiveData(buffer, sizeof(buffer));   // wait to receive the orders from the server
+        cout << buffer << endl;
+        cout << (buffer + 2) << endl;
         if (!strcmp(buffer, "get_ready_for_trip_info")) {
             sock->sendData("waiting_for_trip");      // tell the server that the client is waiting
 

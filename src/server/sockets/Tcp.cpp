@@ -116,7 +116,7 @@ int Tcp::sendData(string data) {
 * The Function operation: getting data from the other socket to,	   *
 * enter it to the buffer and print the data							   *
 ***********************************************************************/
-int Tcp::reciveData(char *buffer, int size) {
+int Tcp::receiveData(char *buffer, int size) {
     int read_bytes = recv(this->isServer ? this->descriptorCommunicateClient
                                          : this->socketDescriptor, buffer, size, 0);
     //checking the errors
@@ -127,7 +127,7 @@ int Tcp::reciveData(char *buffer, int size) {
         return ERROR_RECIVE;
     } else {
         //prinrting the massege
-//		cout<<buffer<<endl;
+		//cout<<buffer<<endl;
     }
     //return correct if there were no problem
     return read_bytes;
