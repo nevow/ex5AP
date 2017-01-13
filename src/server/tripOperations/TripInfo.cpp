@@ -28,6 +28,13 @@ TripInfo::TripInfo(int rideId, Point *start, Point *destination, int amountOfPas
 }
 
 /**
+ * @return the id of the trip info
+ */
+int TripInfo::getRideId() const {
+    return rideId;
+}
+
+/**
  * @return the start time of the ride
  */
 int TripInfo::getTripTime() const {

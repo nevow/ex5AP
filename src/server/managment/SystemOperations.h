@@ -51,6 +51,8 @@ public:
     Point *getDriverLocation(int id);
 
     void moveAll();
+
+    static void *ComputeRoad(void *tripInfo);
 };
 
 
