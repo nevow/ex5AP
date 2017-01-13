@@ -133,6 +133,7 @@ void MainFlow::input() {
                 // clock time - move one step
             case 9: {
                 sock->sendData("9");
+
                 char buf[10];
                 sock->receiveData(buf, 10);
                 so->moveAll();
