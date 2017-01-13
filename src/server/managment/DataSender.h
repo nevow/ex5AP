@@ -26,9 +26,9 @@ class DataSender {
 
 public:
 
-    static void sendData(Socket *sock, T *item);
+    static void sendData(Socket *sock, T *item, int descriptor);
 
-    static T *receiveData(Socket *sock);
+    static T *receiveData(Socket *sock, int descriptor);
 };
 
 

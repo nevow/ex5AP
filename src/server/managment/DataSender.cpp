@@ -10,7 +10,7 @@
  * @param item to send using the socket
  */
 template<class T>
-void DataSender<T>::sendData(Socket *sock, T *item) {
+void DataSender<T>::sendData(Socket *sock, T *item, int descriptor) {
     std::string serial_str;
     {
         boost::iostreams::back_insert_device<std::string> inserter(serial_str);
@@ -20,7 +20,7 @@ void DataSender<T>::sendData(Socket *sock, T *item) {
         oa << item;
         s.flush();
     }
-    sock->sendData(serial_str);
+    sock->sendData(serial_str, descriptor);
 }
 
 /**
@@ -29,9 +29,9 @@ void DataSender<T>::sendData(Socket *sock, T *item) {
  * @return the T item received
  */
 template<class T>
-T *DataSender<T>::receiveData(Socket *sock) {
+T *DataSender<T>::receiveData(Socket *sock, int descriptor) {
     char buffer[1024];
-    sock->receiveData(buffer, sizeof(buffer));
+    sock->receiveData(buffer, sizeof(buffer), descriptor);
     T *item;
     {
         boost::iostreams::basic_array_source<char> dev(buffer, 1024);

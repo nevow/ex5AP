@@ -208,12 +208,12 @@ void TaxiCenter::setDriverToTi(TripInfo *ti) {
     Driver *d = getClosestDriver(ti->getStart());
     pthread_join(computeRoadT[ti->getRideId()], NULL);
     d->setTi(ti);
-    // send the trip info to the client
-    socket->sendData("get_ready_for_trip_info");
+    // sendData the trip info to the client
+    socket->sendData("get_ready_for_trip_info", 0);
     char buffer[1024];
-    socket->receiveData(buffer, 1024);
+    socket->receiveData(buffer, 1024, 0);
     if (!strcmp(buffer, "waiting_for_trip")) {
-        DataSender<TripInfo>::sendData(socket, ti);
+        DataSender<TripInfo>::sendData(socket, ti, 0);
     }
     // put the driver at the employees list
     employees->push_back(d);

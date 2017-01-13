@@ -12,19 +12,21 @@
 #include "../enum/CarManufactureFactory.h"
 #include "../taxi/LuxuryCab.h"
 #include "ProperInput.h"
-#include "../sockets/Udp.h"
 #include "../taxi/Cab.h"
 #include "../taxi/LuxuryCab.h"
+#include "../sockets/Tcp.h"
 
 class MainFlow {
 
 private:
     SystemOperations *so;
     Socket *sock;
-
+    int port;
+    list<Connection *> *connections;
+    pthread_t connection_thread;
 public:
 
-    MainFlow(int ip);
+    MainFlow(int port);
 
     ~MainFlow() {
         delete so;

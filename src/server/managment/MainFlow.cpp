@@ -3,21 +3,24 @@
 //
 
 #include "MainFlow.h"
-#include "DataSender.cpp"
-#include "../sockets/Tcp.h"
 
 using namespace std;
+
+int validateAllReceivedInfo = 0;
+int actionCount = 0;
 
 /**
  * constructor.
  * initialize the environment, get map, obstacles and create a SystemOperations.
  */
-MainFlow::MainFlow(int ip) {
+MainFlow::MainFlow(int port) {
+    this->port = port;
     int rows, columns, obstacleNum;
 
-    // creates a socket for connection with the client
-    sock = new Tcp(1, ip);
-    sock->initialize();
+    connections = new std::list<Connection *>();
+
+    // creates a socket for connection with the clients
+    sock = new Tcp(1, port);
 
     // get the map's size and create it
     cin >> columns >> rows;
@@ -47,6 +50,10 @@ void MainFlow::input() {
     int id, drivers_num, taxi_type, num_passengers, trip_time;
     double tariff;
     char trash, manufacturer, color;
+    vector<Connection *> serverSockets;
+    connectionData cd;
+    cd.sock = sock;
+    cd.connections = connections;
 
     do {
         // get the input from user to choose the action
@@ -55,17 +62,37 @@ void MainFlow::input() {
         switch (choice) {
             // create drivers, gets from the client
             case 1: {
+
                 drivers_num = ProperInput::validInt();      // amount of drivers
                 cin.ignore();
+                sock->initialize(drivers_num);
 
-                for (int i = drivers_num; i > 0; --i) {     // repeates until all drivers arrived
+                int status = pthread_create(&connection_thread, NULL, acceptClient, &cd);
+                if (status) {
+                    cout << "problem creating thread" << endl;
+                }
+                while (connections->size() < drivers_num) {
+                    sleep(1);
+                }
+                for (std::list<Connection *>::const_iterator con = connections->begin(),
+                             end = connections->end(); con != end; ++con) {
+                    // receive the driver from the client
+                    Driver *driver = (*con)->conReceiveData<Driver>();
+
+                    // assign the Driver with the taxi, serialize the taxi, sendData it to the client
+                    Taxi *taxi = so->assignDriver(driver);
+                    (*con)->conSendData<Taxi>(taxi);
+                    (*con)->setOption(&choice);
+                }
+                /*for (int i = drivers_num; i > 0; --i) {     // repeats until all drivers accepted
+
                     // receive the driver from the client
                     Driver *driver = DataSender<Driver>::receiveData(sock);
 
-                    // assign the Driver with the taxi, serialize the taxi, send it to the client
+                    // assign the Driver with the taxi, serialize the taxi, sendData it to the client
                     Taxi *taxi = so->assignDriver(driver);
                     DataSender<Taxi>::sendData(sock, taxi);
-                }
+                }*/
                 break;
             }
 
@@ -132,10 +159,7 @@ void MainFlow::input() {
 
                 // clock time - move one step
             case 9: {
-                sock->sendData("9");
-
-                char buf[10];
-                sock->receiveData(buf, 10);
+                actionCount++;
                 so->moveAll();
                 break;
             }
@@ -145,9 +169,11 @@ void MainFlow::input() {
                 break;
             }
         }
+        while (validateAllReceivedInfo < connections->size()) {
+            sleep(1);
+        }
+        validateAllReceivedInfo = 0;
         // exit condition
     } while (choice != 7);
 
-    // send message to the client to shut down
-    sock->sendData("exit");
 }

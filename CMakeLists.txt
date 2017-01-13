@@ -63,6 +63,9 @@ set(SOURCE_FILES
         src/server/sockets/Udp.cpp
         src/server/sockets/Udp.h
 
+        src/server/sockets/Connection.cpp
+        src/server/sockets/Connection.h
+
         src/server/listeners/SetTripListener.cpp
         src/server/listeners/SetTripListener.h)
 
