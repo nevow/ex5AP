@@ -30,12 +30,12 @@ public:
     void setOption(int *status);
 
     template<class T>
-    void conSendData(T *item) {
+    void sendData(T *item) {
         DataSender<T>::sendData(sock, item, descriptor);
     }
 
     template<class T>
-    T *conReceiveData() {
+    T *receiveData() {
         return DataSender<T>::receiveData(sock, descriptor);
     }
 

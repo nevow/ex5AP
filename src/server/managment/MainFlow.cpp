@@ -46,26 +46,26 @@ MainFlow::MainFlow(int port) {
  * get inputs from user and follow the commands.
  */
 void MainFlow::input() {
-    int choice;
+    int *choice = new int();
     int id, drivers_num, taxi_type, num_passengers, trip_time;
     double tariff;
     char trash, manufacturer, color;
-    vector<Connection *> serverSockets;
     connectionData cd;
     cd.sock = sock;
     cd.connections = connections;
 
     do {
         // get the input from user to choose the action
-        choice = ProperInput::validInt();
+        *choice = ProperInput::validInt();
         cin.ignore();
-        switch (choice) {
+        switch (*choice) {
             // create drivers, gets from the client
             case 1: {
 
                 drivers_num = ProperInput::validInt();      // amount of drivers
                 cin.ignore();
                 sock->initialize(drivers_num);
+                cout << "creating thread" << endl;
 
                 int status = pthread_create(&connection_thread, NULL, acceptClient, &cd);
                 if (status) {
@@ -74,15 +74,16 @@ void MainFlow::input() {
                 while (connections->size() < drivers_num) {
                     sleep(1);
                 }
+                cout << "finished accepting drivers" << endl;
                 for (std::list<Connection *>::const_iterator con = connections->begin(),
                              end = connections->end(); con != end; ++con) {
                     // receive the driver from the client
-                    Driver *driver = (*con)->conReceiveData<Driver>();
+                    Driver *driver = (*con)->receiveData<Driver>();
 
                     // assign the Driver with the taxi, serialize the taxi, sendData it to the client
                     Taxi *taxi = so->assignDriver(driver);
-                    (*con)->conSendData<Taxi>(taxi);
-                    (*con)->setOption(&choice);
+                    (*con)->sendData<Taxi>(taxi);
+                    (*con)->setOption(choice);
                 }
                 /*for (int i = drivers_num; i > 0; --i) {     // repeats until all drivers accepted
 
@@ -159,8 +160,12 @@ void MainFlow::input() {
 
                 // clock time - move one step
             case 9: {
+                cout << "played 9" << endl;
                 actionCount++;
                 so->moveAll();
+                while (validateAllReceivedInfo < connections->size()) {
+                    sleep(1);
+                }
                 break;
             }
 
@@ -169,11 +174,12 @@ void MainFlow::input() {
                 break;
             }
         }
-        while (validateAllReceivedInfo < connections->size()) {
-            sleep(1);
-        }
         validateAllReceivedInfo = 0;
         // exit condition
-    } while (choice != 7);
+    } while ((*choice) != 7);
+    actionCount++;
+    while (validateAllReceivedInfo < connections->size()) {
+        sleep(1);
+    }
 
 }
