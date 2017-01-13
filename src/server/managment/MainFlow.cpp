@@ -161,7 +161,7 @@ void MainFlow::input() {
                 // clock time - move one step
             case 9: {
                 cout << "played 9" << endl;
-                actionCount++;
+                actionCount++;      // global variable that tell the threads to move
                 so->moveAll();
                 while (validateAllReceivedInfo < connections->size()) {
                     sleep(1);

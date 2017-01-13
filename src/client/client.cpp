@@ -14,7 +14,6 @@ int main(int argc, char *argv[]) {
     // create a socket for transferring data between the server and the client
     Socket *sock = new Tcp(0, atoi(argv[2]));
     sock->initialize(0);
-    int descriptor = sock->getSocketDescriptor();
     // save the port number
     int portNumber = atoi(argv[2]);
 
