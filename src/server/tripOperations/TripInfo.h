@@ -46,6 +46,8 @@ public:
         delete destination;
     }
 
+    int getRideId() const;
+
     Point *getStart() const;
 
     Point *getDestination() const;
@@ -82,59 +84,6 @@ public:
         ar & tariff;
         ar & tripTime;
     }
-
-    /*template<class Archive>
-    void save(Archive &ar, const unsigned int version) const {
-        ar & rideId;
-        ar & currentDistance;
-        ar & start;
-        ar & destination;
-        ar & amountOfPassengers;
-        ar & passengers;
-        int size = 0;
-        std::stack<CoordinatedItem *> temp;
-        while (!(road->empty())) {
-            temp.push((road->top()));
-            road->pop();
-            size++;
-        }
-        ar & size;
-        while (!(temp.empty())) {
-            CoordinatedItem *item = temp.top();
-            road->push(item);
-            ar & item;
-            temp.pop();
-        }
-        ar & tariff;
-        ar & tripTime;
-    }
-
-    template<class Archive>
-    void load(Archive &ar, const unsigned int version) {
-        ar & rideId;
-        ar & currentDistance;
-        ar & start;
-        ar & destination;
-        ar & amountOfPassengers;
-        ar & passengers;
-        int size = 0;
-        CoordinatedItem *item;
-        ar & size;
-        std::stack<CoordinatedItem *> temp;
-        for (int i = 0; i < size; i++) {
-            ar & item;
-            temp.push(item);
-        }
-        while (!(temp.empty())) {
-            road->push((temp.top()));
-            temp.pop();
-        }
-        ar & tariff;
-        ar & tripTime;
-    }
-
-    BOOST_SERIALIZATION_SPLIT_MEMBER()*/
-
 };
 
 #endif //EX1_TRIPINFO_H

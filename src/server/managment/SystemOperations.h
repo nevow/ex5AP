@@ -21,7 +21,6 @@ private:
     list<Node *> *obstacles;
     TaxiCenter *tc;
     Map *map;
-    pthread_t t1;
 
 public:
 
@@ -53,7 +52,7 @@ public:
 
     void moveAll();
 
-    static void* ComputeRoad(void *tripInfo);
+    static void *ComputeRoad(void *tripInfo);
 };
 
 

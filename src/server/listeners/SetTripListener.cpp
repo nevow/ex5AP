@@ -23,6 +23,7 @@ void SetTripListener::notify() {
         TripInfo *ti = taxiCenter->getUrgentTi();
         // if there is a trip info
         if (ti != NULL) {
+
             taxiCenter->setDriverToTi(ti);
         } else {
             return;

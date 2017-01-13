@@ -2,10 +2,13 @@
 // TaxiCenter.
 //
 
+#include <map>
 #include "TaxiCenter.h"
 #include "../listeners/TripEndListener.h"
 #include "../listeners/SetTripListener.h"
 #include "../managment/DataSender.cpp"
+
+extern std::map<int, pthread_t> computeRoadT;
 
 /**
  * consturctor.
@@ -203,6 +206,7 @@ void TaxiCenter::addTI(TripInfo *ti) {
 void TaxiCenter::setDriverToTi(TripInfo *ti) {
     // get the closest available driver, assign him with the trip info.
     Driver *d = getClosestDriver(ti->getStart());
+    pthread_join(computeRoadT[ti->getRideId()], NULL);
     d->setTi(ti);
     // send the trip info to the client
     socket->sendData("get_ready_for_trip_info");
@@ -232,56 +236,4 @@ void TaxiCenter::moveAll() {
         (*iterator)->notify();
     }
 }
-
-/**
- * @param el is event listener to remove from the list;
- */
-/*void TaxiCenter::removeListener(EventListener *el) {
-    // create temp list
-    std::list<EventListener *> temp;
-    while (!listeners->empty()) {
-        // take the listener out
-        EventListener *e = listeners->front();
-        listeners->pop_front();
-        // if this is the listener to delete
-        if (e == el) {
-            // push all the listeners in the temp list to the original
-            while (!temp.empty()) {
-                listeners->push_front((temp.front()));
-                temp.pop_front();
-            }
-            return;
-            // push the listener from the original list to the temp list
-        } else {
-            temp.push_front(e);
-        }
-    }
-}*/
-
-
-/**
- * not used in this assigment yet.
- * to be continued
- * @param p
- * @return
- */
-/*TripInfo *TaxiCenter::answerCall(Passenger *p) {
-    return NULL;
-}*/
-
-
-/**
- * @param d is the driver to assign the taxi too and to send on his way.
- *//*
-void TaxiCenter::sendTaxi(Driver *d) {
-    int cabId = d->getVehicle_id();
-    // iterate over all the cabs, search for the right id.
-    for (Taxi *t : *cabs) {
-        if (t->getId() == cabId) {
-            d->setCab(t);
-            return;
-        }
-    }
-}*/
-
 

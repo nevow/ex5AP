@@ -46,6 +46,7 @@ int main(int argc, char *argv[]) {
     std::list<CoordinatedItem *> *tempRoad = NULL;   // to save the road of  the trip info
     // do while the server still sends orders different from the exit order "exit"
     do {
+        sock->sendData("got");
         sock->receiveData(buffer, sizeof(buffer));   // wait to receive the orders from the server
         cout << buffer << endl;
         cout << (buffer + 2) << endl;
