@@ -61,11 +61,11 @@ int Udp::sendData(string data) {
     sin.sin_port = htons(this->port_number);
     const char *datas = data.c_str();
     int data_len = data.length() + 1;
-    //send
+    //sendData
     int sent_bytes = sendto(this->socketDescriptor, datas, data_len, 0, (struct sockaddr *) &sin,
                             sizeof(sin));
     //cout << sent_bytes << endl;
-    //check if send successfully
+    //check if sendData successfully
     if (sent_bytes < 0) {
         return ERROR_SEND;
     }

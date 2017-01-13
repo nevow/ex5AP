@@ -37,7 +37,7 @@ protected:
     int socketDescriptor;
     //ip address
     string ip_address;
-    int backLog;
+    int numberOfClients;
     //port number
     int port_number;
 
@@ -59,7 +59,7 @@ public:
      * initialize the Socket object and getting a socket descriptor.
      * @return int number representing the return status
      */
-    virtual int initialize() = 0;
+    virtual int initialize(int clientsNumber) = 0;
 
     /**
      * pure virtual method.
@@ -67,7 +67,7 @@ public:
      * @param data is the string representing the data to send
      * @return int number representing the return status
      */
-    virtual int sendData(string data) = 0;
+    virtual int sendData(string data, int descriptor) = 0;
 
     /**
      * getting data from the other socket and print the data
@@ -75,7 +75,11 @@ public:
      * @param size is the size of the data
      * @return int number representing the return status
      */
-    virtual int receiveData(char *buffer, int size) = 0;
+    virtual int receiveData(char *buffer, int size, int descriptor) = 0;
+
+    int getSocketDescriptor() const;
+
+    int getNumberOfClients() const;
 };
 
 #endif /* SOCKET_H_ */

@@ -63,11 +63,14 @@ set(SOURCE_FILES
         src/server/sockets/Udp.cpp
         src/server/sockets/Udp.h
 
+        src/server/sockets/Connection.cpp
+        src/server/sockets/Connection.h
+
         src/server/listeners/SetTripListener.cpp
         src/server/listeners/SetTripListener.h)
 
 add_executable(client src/client/client.cpp ${SOURCE_FILES})
 add_executable(server src/server/server.cpp ${SOURCE_FILES})
 
-target_link_libraries(client ${Boost_LIBRARIES})
-target_link_libraries(server ${Boost_LIBRARIES})
+target_link_libraries(client -lpthread ${Boost_LIBRARIES})
+target_link_libraries(server -lpthread ${Boost_LIBRARIES})

@@ -14,7 +14,7 @@
  */
 Socket::Socket() {
     this->ip_address = IP;
-    this->backLog = NONE;
+    this->numberOfClients = NONE;
     this->socketDescriptor = NONE;
     this->isServer = true;
     this->port_number = NONE;
@@ -25,4 +25,12 @@ Socket::Socket() {
  */
 Socket::~Socket() {
     close(this->socketDescriptor);
+}
+
+int Socket::getSocketDescriptor() const {
+    return socketDescriptor;
+}
+
+int Socket::getNumberOfClients() const {
+    return numberOfClients;
 }
