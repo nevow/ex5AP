@@ -12,9 +12,6 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
-    // save the port number
-    int portNumber = atoi(argv[2]);
-
     // get a driver with user input
     int id, age, experience, vehicleId;
     char trash, status;
@@ -34,7 +31,7 @@ int main(int argc, char *argv[]) {
 
     // create a driver with the user input
     Driver *driver = new Driver(id, age, MartialStatuesFactory::getMartialStatus(status),
-                                experience, vehicleId, portNumber);
+                                experience, vehicleId);
     // serialize and sendData the driver
     DataSender<Driver>::sendData(sock, driver, 0);
 

@@ -44,23 +44,20 @@ void TripEndListener::notify() {
                      end = drivers->end(); iterator != end; ++iterator) {
             tempList.push_back((*iterator));
         }
-        Driver *d;
-        for (std::list<Driver *>::const_iterator iterator = tempDrivers.begin(),
-                     end = tempDrivers.end(); iterator != end; ++iterator) {
+        for (std::list<Driver *>::const_iterator iterator = tempList.begin(),
+                     end = tempList.end(); iterator != end; ++iterator) {
             // compare each driver until finding the right one
             if (*(*iterator) == *driver) {
                 drivers->pop_front();
                 // insert all the drivers from the temp list back to the original
                 while (!tempDrivers.empty()) {
-                    d = tempDrivers.front();
+                    drivers->push_front((tempDrivers.front()));
                     tempDrivers.pop_front();
-                    drivers->push_front(d);
                 }
                 break;
             } else {      // if didn't found the right driver, pop and insert to the temp list
-                d = drivers->front();
+                tempDrivers.push_front((drivers->front()));
                 drivers->pop_front();
-                tempDrivers.push_front(d);
             }
         }
         // push the driver to the available list
