@@ -185,7 +185,7 @@ TripInfo *TaxiCenter::getUrgentTi() {
         if (tripInfo != NULL) {
             TripInfo *temp = trips->front();
             trips->pop_front();
-            while (temp != tripInfo) {
+            while (*temp != *tripInfo) {
                 trips->push_back(temp);
                 temp = trips->front();
                 trips->pop_front();
@@ -219,18 +219,18 @@ void TaxiCenter::setDriverToTi(TripInfo *ti) {
     pthread_join(computeRoadT[ti->getRideId()], NULL);
     d->setTi(ti);
     Connection *c = (*conMap)[d->getId()];
+
     // tell the client that his getting trip info
     c->send("get_ready_for_trip_info");
     char buffer[50];
     // receive from the client that his ready
     c->receive(buffer, sizeof(buffer));
-    cout << buffer << endl;
+
     // send the trip info to the client
     c->sendData<TripInfo>(ti);
-    char buf[50];
     // receive confirm from the client
-    c->receive(buf, sizeof(buf));
-    cout << buf << endl;
+    c->receive(buffer, sizeof(buffer));
+
     // put the driver at the employees list
     employees->push_back(d);
 }

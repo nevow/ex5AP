@@ -67,6 +67,9 @@ int Tcp::initialize(int clientsNumber) {
 
         //if client
     } else {
+        int buffsize = 1024*1024;
+        //setsockopt()
+        //setsockopt(s, SOL_SOCKET, SO_RCVBUF, &buffsize, sizeof(buffsize));
         struct sockaddr_in sin;
         memset(&sin, 0, sizeof(sin));
         sin.sin_family = AF_INET;
@@ -145,7 +148,6 @@ void *acceptClients(void *data) {
                 break;
             }
             connectedClient++;
-            cout << "accepted driver number: " << connectedClient << endl;
             Connection *c = new Connection(cd->sock, descriptorCommunicateClient);
             pthread_mutex_lock(&connection_list_locker);
             cd->connections->push_back(c);

@@ -123,5 +123,5 @@ void *SystemOperations::ComputeRoad(void *threadArgs) {
     delete start;
     args->ti->setRoad(road);        // set the road in the Trip Info
     delete (args);
-    cout << "finished calculating road" << endl;
+    return NULL;
 }
