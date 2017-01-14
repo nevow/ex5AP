@@ -1,10 +1,10 @@
 all: server.out client.out
 
-server.out: server.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o BFS.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o Socket.o Udp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o
-	g++ -o server.out -std=c++0x server.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o BFS.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o Socket.o Udp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o -lboost_serialization
+server.out: server.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o BFS.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o Connection.o
+	g++ -o server.out -std=c++0x server.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o BFS.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o Connection.o -lboost_serialization -lpthread
 
-client.out: client.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o BFS.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o Socket.o Udp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o
-	g++ -o client.out -std=c++0x client.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o BFS.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o Socket.o Udp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o -lboost_serialization
+client.out: client.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o BFS.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o Connection.o
+	g++ -o client.out -std=c++0x client.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o BFS.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o Connection.o -lboost_serialization -lpthread
 
 client.o: src/client/client.cpp
 	g++ -std=c++0x -c src/client/client.cpp
@@ -45,8 +45,8 @@ SystemOperations.o: src/server/managment/SystemOperations.cpp src/server/managme
 Socket.o: src/server/sockets/Socket.cpp src/server/sockets/Socket.h
 	g++ -std=c++0x -c src/server/sockets/Socket.cpp
 
-Udp.o: src/server/sockets/Udp.cpp src/server/sockets/Udp.h
-	g++ -std=c++0x -c src/server/sockets/Udp.cpp
+Tcp.o: src/server/sockets/Tcp.cpp src/server/sockets/Tcp.h
+	g++ -std=c++0x -c src/server/sockets/Tcp.cpp
 
 Cab.o: src/server/taxi/Cab.cpp src/server/taxi/Cab.h
 	g++ -std=c++0x -c src/server/taxi/Cab.cpp
@@ -68,6 +68,9 @@ TaxiCenter.o: src/server/tripOperations/TaxiCenter.cpp src/server/tripOperations
 
 TripInfo.o: src/server/tripOperations/TripInfo.cpp src/server/tripOperations/TripInfo.h
 	g++ -std=c++0x -c src/server/tripOperations/TripInfo.cpp
+
+Connection.o: src/server/sockets/Connection.cpp src/server/sockets/Connection.h
+	g++ -std=c++0x -c src/server/sockets/Connection.cpp
 
 clean:
 	rm -f *.o server.out client.out
