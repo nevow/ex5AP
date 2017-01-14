@@ -126,7 +126,7 @@ int Tcp::receiveData(char *buffer, int size, int descriptor) {
     return read_bytes;
 }
 
-void *acceptClient(void *data) {
+void *acceptClients(void *data) {
     pthread_mutex_t connection_list_locker;
     pthread_mutex_init(&connection_list_locker, 0);
     connectionData *cd = (connectionData *) data;

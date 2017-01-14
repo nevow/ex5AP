@@ -65,7 +65,7 @@ public:
  * @param data for the thread function
  * @return NULL
  */
-void *acceptClient(void *data);
+void *acceptClients(void *data);
 
 /**
  * struct used to transfer data to the thread

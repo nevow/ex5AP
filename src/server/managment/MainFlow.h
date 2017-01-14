@@ -20,12 +20,14 @@
 class MainFlow {
 
 private:
+
     SystemOperations *so;
     Socket *sock;
     list<Connection *> *connections;
     pthread_t connection_thread;
     map<int, Connection *> *conMap;
     int *choice;
+
 public:
 
     MainFlow(int port);

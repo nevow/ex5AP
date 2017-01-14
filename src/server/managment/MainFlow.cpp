@@ -14,10 +14,9 @@ int actionCount = 0;
  * initialize the environment, get map, obstacles and create a SystemOperations.
  */
 MainFlow::MainFlow(int port) {
+
     int rows, columns, obstacleNum;
-
     connections = new std::list<Connection *>();
-
     // creates a socket for connection with the clients
     sock = new Tcp(1, port);
 
@@ -58,35 +57,32 @@ void MainFlow::input() {
         *choice = ProperInput::validInt();
         cin.ignore();
         switch (*choice) {
+
             // create drivers, gets from the client
             case 1: {
-
                 drivers_num = ProperInput::validInt();      // amount of drivers
                 cin.ignore();
                 sock->initialize(drivers_num);
-
-                int status = pthread_create(&connection_thread, NULL, acceptClient, &cd);
+                // create thread that handle with client acceptnes
+                int status = pthread_create(&connection_thread, NULL, acceptClients, &cd);
                 if (status) {
                     cout << "problem creating thread" << endl;
+                    break;
                 }
-                pthread_join(connection_thread, NULL);
-                while (connections->size() < drivers_num) {
-                    sleep(1);
-                }
+                pthread_join(connection_thread, NULL);      // wait until the the thread finish
                 for (std::list<Connection *>::const_iterator con = connections->begin(),
                              end = connections->end(); con != end; ++con) {
                     // receive the driver from the client
                     Driver *driver = (*con)->receiveData<Driver>();
+                    // update the connection-id Driver map
                     (*conMap)[driver->getId()] = (*con);
-
-                    // assign the Driver with the taxi, serialize the taxi, sendData it to the client
+                    // assign the Driver with the taxi, serialize the taxi, send it to the client
                     Taxi *taxi = so->assignDriver(driver);
                     (*con)->sendData<Taxi>(taxi);
                     (*con)->setOption(choice);
                 }
                 break;
             }
-
                 // create new TripInfo
             case 2: {
                 // get the input for the trip info
@@ -138,9 +134,8 @@ void MainFlow::input() {
             }
                 // request for a driver location by his id
             case 4: {
-                id = ProperInput::validInt();
+                id = ProperInput::validInt();            // the id of the requested driver
                 cin.ignore();
-
                 Point *location = so->getDriverLocation(id);
                 if (location) {
                     cout << *location;
@@ -150,24 +145,23 @@ void MainFlow::input() {
 
                 // clock time - move one step
             case 9: {
-                actionCount++;      // global variable that tell the threads to move
+                actionCount++;               // global variable that tells the threads to move
                 while (validateAllReceivedInfo < connections->size()) {
                     sleep(1);
                 }
                 so->moveAll();
-
                 break;
             }
-
-                // every other case - don't do anything.
+                // in every other case - don't do anything.
             default: {
                 break;
             }
         }
-        validateAllReceivedInfo = 0;
+        validateAllReceivedInfo = 0;         // initialize for the next choice
         // exit condition
     } while ((*choice) != 7);
     actionCount++;
+    // wait that all the clients will finish their exit
     while (validateAllReceivedInfo < connections->size()) {
         sleep(1);
     }
