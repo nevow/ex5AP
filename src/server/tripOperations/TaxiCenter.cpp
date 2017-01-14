@@ -218,7 +218,6 @@ void TaxiCenter::setDriverToTi(TripInfo *ti) {
     char buffer[50];
     c->receive(buffer, sizeof(buffer));
     cout << buffer << endl;
-    //if (!strcmp(buffer, "waiting_for_trip")) {
     c->sendData<TripInfo>(ti);
     char buf[50];
     c->receive(buf, sizeof(buf));

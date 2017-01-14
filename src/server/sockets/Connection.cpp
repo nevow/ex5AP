@@ -39,34 +39,28 @@ void *sendInfoToClient(void *data) {
     do {
         if (actionCount > count) {
             tempOption = *choice;
-            switch (tempOption) {
-                case 9: {
-                    count++;
-                    con->send("9");
-                    con->receive(buffer, sizeof(buffer));
-                    pthread_mutex_lock(&global_validator_locker);
-                    validateAllReceivedInfo++;
-                    pthread_mutex_unlock(&global_validator_locker);
-                    break;
-                }
-                case 7: {
-                    con->send("exit");
-                    con->receive(buffer, sizeof(buffer));
-                    pthread_mutex_lock(&global_validator_locker);
-                    validateAllReceivedInfo++;
-                    pthread_mutex_unlock(&global_validator_locker);
-                    break;
-                }
-                default: {
-                    sleep(1);
-                    break;
-                }
+            if (tempOption == 9) {
+                count++;
+                con->send("9");
+                con->receive(buffer, sizeof(buffer));
+                pthread_mutex_lock(&global_validator_locker);
+                validateAllReceivedInfo++;
+                pthread_mutex_unlock(&global_validator_locker);
+            } else if (tempOption == 7) {
+                con->send("exit");
+                con->receive(buffer, sizeof(buffer));
+                pthread_mutex_lock(&global_validator_locker);
+                validateAllReceivedInfo++;
+                pthread_mutex_unlock(&global_validator_locker);
+            } else {
+                sleep(1);
             }
         } else {
             tempOption = 0;
             sleep(1);
         }
     } while (tempOption != 7);
+    return NULL;
 }
 
 void Connection::send(string c) {

@@ -167,7 +167,7 @@ void MainFlow::input() {
                     sleep(1);
                 }
                 so->moveAll();
-                
+
                 break;
             }
 
@@ -183,5 +183,5 @@ void MainFlow::input() {
     while (validateAllReceivedInfo < connections->size()) {
         sleep(1);
     }
-
+    delete choice;
 }

@@ -31,7 +31,13 @@ public:
     MainFlow(int port);
 
     ~MainFlow() {
+        pthread_join(connection_thread, NULL);
         delete so;
+        delete conMap;
+        while (!(connections->empty())) {
+            delete connections->front();
+            connections->pop_front();
+        }
         delete sock;
     }
 

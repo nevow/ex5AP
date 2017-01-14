@@ -109,6 +109,6 @@ void *SystemOperations::ComputeRoad(void *threadArgs) {
     std::list<CoordinatedItem *> *road = BFS::use(args->grid, start, dest);
     delete start;
     args->ti->setRoad(road);
-    delete (threadArgs);
+    delete (args);
     cout << "finished calculating road" << endl;
 }
