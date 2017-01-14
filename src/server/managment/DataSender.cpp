@@ -30,11 +30,12 @@ void DataSender<T>::sendData(Socket *sock, T *item, int descriptor) {
  */
 template<class T>
 T *DataSender<T>::receiveData(Socket *sock, int descriptor) {
-    char buffer[1024];
+    char buffer[130000];
+    cout << sizeof(buffer) << endl;
     sock->receiveData(buffer, sizeof(buffer), descriptor);
     T *item;
     {
-        boost::iostreams::basic_array_source<char> dev(buffer, 1024);
+        boost::iostreams::basic_array_source<char> dev(buffer, sizeof(buffer));
         boost::iostreams::stream<boost::iostreams::basic_array_source<char>> s2(dev);
         boost::archive::binary_iarchive ia(s2);
         ia >> item;

@@ -16,14 +16,15 @@ struct ThreadArgs {
 /**
  * constructor.
  * @param map1 the map to do on it the operations
- * @param obs is a lists of obstacles.
+ * @param conMap is a map of ints and connections.
  */
-SystemOperations::SystemOperations(Map *map1, Socket *socket) {
+SystemOperations::SystemOperations(Map *map1, std::map<int, Connection *> *conMap) {
     map = map1;
     obstacles = new list<Node *>;
-    tc = new TaxiCenter(socket);
+    tc = new TaxiCenter(conMap);
     x = map->getColumns();
     y = map->getRows();
+    pthread_mutex_init(&grid_locker, 0);
 }
 
 /**
@@ -76,7 +77,7 @@ void SystemOperations::addTI(TripInfo *tripInfo) {
     ThreadArgs *threadArgs = new ThreadArgs();
     threadArgs->ti = tripInfo;
     threadArgs->grid = map;
-    int status = pthread_create(&t1, NULL, ComputeRoad, (void *) threadArgs);
+    int status = pthread_create(&t1, NULL, ComputeRoad, threadArgs);
     if (!status) {
         computeRoadT[tripInfo->getRideId()] = t1;
         tc->addTI(tripInfo);
@@ -109,4 +110,5 @@ void *SystemOperations::ComputeRoad(void *threadArgs) {
     delete start;
     args->ti->setRoad(road);
     delete (threadArgs);
+    cout << "finished calculating road" << endl;
 }

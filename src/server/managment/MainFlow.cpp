@@ -30,9 +30,9 @@ MainFlow::MainFlow(int port) {
     // get the obstacle amount
     obstacleNum = ProperInput::validInt();
     cin.ignore();
-
+    conMap = new std::map<int, Connection *>();
     // create the system operation
-    so = new SystemOperations(map, sock);
+    so = new SystemOperations(map, conMap);
 
     // make the obstacles List from the input
     for (; obstacleNum > 0; obstacleNum--) {
@@ -79,6 +79,7 @@ void MainFlow::input() {
                              end = connections->end(); con != end; ++con) {
                     // receive the driver from the client
                     Driver *driver = (*con)->receiveData<Driver>();
+                    (*conMap)[driver->getId()] = (*con);
 
                     // assign the Driver with the taxi, serialize the taxi, sendData it to the client
                     Taxi *taxi = so->assignDriver(driver);
@@ -162,10 +163,11 @@ void MainFlow::input() {
             case 9: {
                 cout << "played 9" << endl;
                 actionCount++;      // global variable that tell the threads to move
-                so->moveAll();
                 while (validateAllReceivedInfo < connections->size()) {
                     sleep(1);
                 }
+                so->moveAll();
+                
                 break;
             }
 

@@ -11,9 +11,7 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-    // create a socket for transferring data between the server and the client
-    Socket *sock = new Tcp(0, atoi(argv[2]));
-    sock->initialize(0);
+
     // save the port number
     int portNumber = atoi(argv[2]);
 
@@ -29,6 +27,10 @@ int main(int argc, char *argv[]) {
     vehicleId = ProperInput::validInt();
     cin.ignore();
     char buffer[50];
+
+    // create a socket for transferring data between the server and the client
+    Socket *sock = new Tcp(0, atoi(argv[2]));
+    sock->initialize(0);
 
     // create a driver with the user input
     Driver *driver = new Driver(id, age, MartialStatuesFactory::getMartialStatus(status),
@@ -50,9 +52,11 @@ int main(int argc, char *argv[]) {
         sock->sendData("received", 0);
         if (!strcmp(buffer, "get_ready_for_trip_info")) {
             //sock->sendData("waiting_for_trip", 0);   / tell the server that the client is waiting
-
+            cout << "waiting for trip info" << endl;
             // deserialize the trip info from the server
             ti = DataSender<TripInfo>::receiveData(sock, 0);
+            cout << "received trip info" << endl;
+            sock->sendData("received", 0);
             tempRoad = new list<CoordinatedItem *>;
             std::list<CoordinatedItem *> *road = ti->getRoad();
             // pass the coordinated items of the road to the tempRoad

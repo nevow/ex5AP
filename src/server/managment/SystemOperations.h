@@ -11,6 +11,8 @@
 #include "../coordinates/Map.h"
 #include "../listeners/EventListener.h"
 
+extern pthread_mutex_t grid_locker;
+
 using namespace std;
 
 class SystemOperations {
@@ -24,9 +26,10 @@ private:
 
 public:
 
-    SystemOperations(Map *map, Socket *socket);
+    SystemOperations(Map *map, std::map<int, Connection *> *cm);
 
     ~SystemOperations() {
+        pthread_mutex_destroy(&grid_locker);        // destroy the mutex
         delete (map);
         delete (tc);
         while (!obstacles->empty()) {

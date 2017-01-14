@@ -13,6 +13,8 @@
 #include "../listeners/EventListener.h"
 #include "../sockets/Socket.h"
 #include "../sockets/Udp.h"
+#include "../sockets/Connection.h"
+#include <map>
 
 using namespace std;
 
@@ -26,7 +28,7 @@ private:
     list<TripInfo *> *trips;
     list<Driver *> *availableDrivers;
     list<EventListener *> *listeners;
-    Socket *socket;
+    std::map<int, Connection *> *conMap;
     int clock;
 
 public:
@@ -34,9 +36,9 @@ public:
     TaxiCenter(list<Driver *> *employees, list<Node *> *locations, list<Taxi *> *cabs,
                list<TripInfo *> *trips)
             : employees(employees), locations(locations), cabs(cabs), trips(trips),
-              availableDrivers(employees), clock(0) {}
+              availableDrivers(employees), clock(0) {};
 
-    TaxiCenter(Socket *sock);
+    TaxiCenter(std::map<int, Connection *> *cm);
 
     ~TaxiCenter();
 

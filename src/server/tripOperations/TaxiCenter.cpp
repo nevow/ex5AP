@@ -6,7 +6,6 @@
 #include "TaxiCenter.h"
 #include "../listeners/TripEndListener.h"
 #include "../listeners/SetTripListener.h"
-#include "../managment/DataSender.cpp"
 
 extern std::map<int, pthread_t> computeRoadT;
 
@@ -14,7 +13,7 @@ extern std::map<int, pthread_t> computeRoadT;
  * consturctor.
  * @param sock is the socket of the driver
  */
-TaxiCenter::TaxiCenter(Socket *sock) : socket(sock) {
+TaxiCenter::TaxiCenter(map<int, Connection *> *cm) : conMap(cm) {
     employees = new list<Driver *>();
     locations = new list<Node *>();
     cabs = new list<Taxi *>();
@@ -132,8 +131,9 @@ Taxi *TaxiCenter::getTaxiByID(int id) {
  */
 Driver *TaxiCenter::getClosestDriver(Point *start) {
     std::list<Driver *> temp;
+    Driver *d;
     while (!availableDrivers->empty()) {
-        Driver *d = availableDrivers->front();
+        d = availableDrivers->front();
         availableDrivers->pop_front();
         if (*(d->getCab()->getLocation()->getP()) == *start) {
             // return all drivers from the temp list to the available list
@@ -145,6 +145,10 @@ Driver *TaxiCenter::getClosestDriver(Point *start) {
         } else {
             temp.push_front(d);
         }
+    }
+    while (!temp.empty()) {
+        availableDrivers->push_front((temp.front()));
+        temp.pop_front();
     }
     return NULL;
 }
@@ -208,13 +212,17 @@ void TaxiCenter::setDriverToTi(TripInfo *ti) {
     Driver *d = getClosestDriver(ti->getStart());
     pthread_join(computeRoadT[ti->getRideId()], NULL);
     d->setTi(ti);
+    Connection *c = (*conMap)[d->getId()];
     // sendData the trip info to the client
-    socket->sendData("get_ready_for_trip_info", 0);
-    char buffer[1024];
-    socket->receiveData(buffer, 1024, 0);
-    if (!strcmp(buffer, "waiting_for_trip")) {
-        DataSender<TripInfo>::sendData(socket, ti, 0);
-    }
+    c->send("get_ready_for_trip_info");
+    char buffer[50];
+    c->receive(buffer, sizeof(buffer));
+    cout << buffer << endl;
+    //if (!strcmp(buffer, "waiting_for_trip")) {
+    c->sendData<TripInfo>(ti);
+    char buf[50];
+    c->receive(buf, sizeof(buf));
+    cout << buf << endl;
     // put the driver at the employees list
     employees->push_back(d);
 }

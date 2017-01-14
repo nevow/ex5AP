@@ -38,10 +38,15 @@ void TripEndListener::notify() {
         // traverse over all the working drivers,find the current driver,
         // move him to the available list
         std::list<Driver *> *drivers = tc->getEmployees();
+        std::list<Driver *> tempList;
         std::list<Driver *> tempDrivers;
-        Driver *d;
         for (std::list<Driver *>::const_iterator iterator = drivers->begin(),
                      end = drivers->end(); iterator != end; ++iterator) {
+            tempList.push_back((*iterator));
+        }
+        Driver *d;
+        for (std::list<Driver *>::const_iterator iterator = tempDrivers.begin(),
+                     end = tempDrivers.end(); iterator != end; ++iterator) {
             // compare each driver until finding the right one
             if (*(*iterator) == *driver) {
                 drivers->pop_front();

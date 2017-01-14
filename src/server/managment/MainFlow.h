@@ -6,6 +6,7 @@
 #define EX1_MAINFLOW_H
 
 #include <list>
+#include <map>
 
 #include "SystemOperations.h"
 #include "../enum/ColorFactory.h"
@@ -24,6 +25,7 @@ private:
     int port;
     list<Connection *> *connections;
     pthread_t connection_thread;
+    map<int, Connection *> *conMap;
 public:
 
     MainFlow(int port);
