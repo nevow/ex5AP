@@ -133,23 +133,28 @@ Driver *TaxiCenter::getClosestDriver(Point *start) {
     std::list<Driver *> temp;
     Driver *d;
     while (!availableDrivers->empty()) {
-        d = availableDrivers->front();
+        d = availableDrivers->front();     // temp driver to check
         availableDrivers->pop_front();
+        // if the start point match to the one of the temp driver
         if (*(d->getCab()->getLocation()->getP()) == *start) {
             // return all drivers from the temp list to the available list
             while (!temp.empty()) {
                 availableDrivers->push_front((temp.front()));
                 temp.pop_front();
             }
+            // return the driver
             return d;
         } else {
+            // else, push the temp driver to the temp list
             temp.push_front(d);
         }
     }
+    // return all the drivers from the temp list to availableDrivers list
     while (!temp.empty()) {
         availableDrivers->push_front((temp.front()));
         temp.pop_front();
     }
+    // if no driver has been found return null
     return NULL;
 }
 
@@ -163,7 +168,7 @@ void TaxiCenter::addDriver(Driver *d) {
 
 /**
  * search the trip info in the trips list that start at the current time and return it.
- * @return the tripInfo
+ * @return the tripInfo that found, if there isn't - return null
  */
 TripInfo *TaxiCenter::getUrgentTi() {
     TripInfo *tripInfo = NULL;
@@ -210,16 +215,20 @@ void TaxiCenter::addTI(TripInfo *ti) {
 void TaxiCenter::setDriverToTi(TripInfo *ti) {
     // get the closest available driver, assign him with the trip info.
     Driver *d = getClosestDriver(ti->getStart());
+    // wait for the thread that compute the rode of the trip info
     pthread_join(computeRoadT[ti->getRideId()], NULL);
     d->setTi(ti);
     Connection *c = (*conMap)[d->getId()];
-    // sendData the trip info to the client
+    // tell the client that his getting trip info
     c->send("get_ready_for_trip_info");
     char buffer[50];
+    // receive from the client that his ready
     c->receive(buffer, sizeof(buffer));
     cout << buffer << endl;
+    // send the trip info to the client
     c->sendData<TripInfo>(ti);
     char buf[50];
+    // receive confirm from the client
     c->receive(buf, sizeof(buf));
     cout << buf << endl;
     // put the driver at the employees list

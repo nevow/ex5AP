@@ -17,13 +17,6 @@ Driver::Driver(int id, int age, const MartialStatues &status, int experience, in
     ti = NULL;
 }
 
-Driver::Driver(int id, int age, const MartialStatues &status, int experience, int vehicle_id,
-               int port) : id(id), age(age), status(status), experience(experience),
-                           vehicleId(vehicle_id), port(port) {
-    satisfaction = new Satisfaction();
-    ti = NULL;
-}
-
 /**
  * @return the id of the driver
  */
@@ -53,7 +46,6 @@ int Driver::getExperience() const {
 }
 
 /**
- *
  * @return the vehicle id
  */
 int Driver::getVehicle_id() const {

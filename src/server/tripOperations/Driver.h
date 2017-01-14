@@ -31,8 +31,6 @@ public:
 
     Driver(int id, int age, const MartialStatues &status, int experience, int vehicle_id);
 
-    Driver(int id, int age,const MartialStatues &status, int experience, int vehicle_id, int port);
-
     ~Driver() {
         delete (satisfaction);
         if (ti) {

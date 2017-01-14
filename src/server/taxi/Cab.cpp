@@ -16,13 +16,14 @@ void Cab::setTariff(double t) {
  */
 void Cab::move(std::list<CoordinatedItem *> *road) {
     if (!road->empty()) {
+        // get the next point of the road from the trip info
         CoordinatedItem *item = road->front();
         road->pop_front();
         int **coords = item->getCoordinates();
         Point p(*(coords[0]), *(coords[1]));
-        applyToPoint(&p);
+        applyToPoint(&p);                       // move the car to the next point
         p.deleteCoords(coords);
-        increaseKmPassed();
+        increaseKmPassed();                     // increase the km passed
     }
 }
 

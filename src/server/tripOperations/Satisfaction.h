@@ -21,10 +21,13 @@
 #include <boost/archive/binary_iarchive.hpp>
 
 class Satisfaction {
+
 private:
     int amount;
     double average;
+
 public:
+
     Satisfaction();
 
     Satisfaction(Satisfaction *s);

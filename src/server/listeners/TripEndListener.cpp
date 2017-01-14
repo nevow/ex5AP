@@ -20,7 +20,7 @@ TripEndListener::TripEndListener(Driver *driver, TaxiCenter *tc) : driver(driver
  */
 void TripEndListener::notify() {
     TripInfo *ti = driver->getTi();
-    // if there is no trip info dont do a thing.
+    // if there is no trip info don't do a thing.
     if (!ti) {
         return;
     }

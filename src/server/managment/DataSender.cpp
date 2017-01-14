@@ -8,6 +8,7 @@
  * @tparam T type of item
  * @param sock socket to transfer the data with
  * @param item to send using the socket
+ * @param descriptor identify the client
  */
 template<class T>
 void DataSender<T>::sendData(Socket *sock, T *item, int descriptor) {
@@ -26,6 +27,7 @@ void DataSender<T>::sendData(Socket *sock, T *item, int descriptor) {
 /**
  * @tparam T type of item
  * @param sock socket to transfer the data with
+ * @param descriptor identify the client
  * @return the T item received
  */
 template<class T>

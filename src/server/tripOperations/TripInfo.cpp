@@ -5,12 +5,13 @@
 #include "TripInfo.h"
 
 /**
- * constructor.
+  * constructor.
  * @param rideId for the trip
  * @param start point of the trip
  * @param destination point of the trip
  * @param amountOfPassengers of the trip
  * @param tariff of the trip
+ * @param time of the ride
  */
 TripInfo::TripInfo(int rideId, Point *start, Point *destination, int amountOfPassengers,
                    double tariff, int time) : rideId(rideId), start(start),

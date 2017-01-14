@@ -6,8 +6,12 @@
 #include "SystemOperations.h"
 #include "BFS.h"
 
-std::map<int, pthread_t> computeRoadT;              // global map of id trips info (key) and threads (value)
+// global map of id trips info (key) and threads (value)
+std::map<int, pthread_t> computeRoadT;
 
+/**
+ * struct ThreadArgs has Map and TripInfo
+ */
 struct ThreadArgs {
     Map *grid;
     TripInfo *ti;
@@ -65,11 +69,12 @@ void SystemOperations::addTaxi(Taxi *cab) {
 void SystemOperations::addObstacle(Point obstacle) {
     Node *n = new Node(&obstacle);
     obstacles->push_front(n);
-    map->setItem(n, -2);            // set the match node on the grid to -2
+    map->setItem(n, -2);                    // set the match node on the grid to -2
 }
 
 /**
- * addTI use the BFS to calculate the road of the ride, add the tripInfo to the taxi center
+ * addTI add the tripInfo to the taxi center,
+ * and create thread with the function ComputeRoad
  * @param tripInfo is the TripInfo to add to the taxi center
  */
 void SystemOperations::addTI(TripInfo *tripInfo) {
@@ -77,10 +82,12 @@ void SystemOperations::addTI(TripInfo *tripInfo) {
     ThreadArgs *threadArgs = new ThreadArgs();
     threadArgs->ti = tripInfo;
     threadArgs->grid = map;
+
     int status = pthread_create(&t1, NULL, ComputeRoad, threadArgs);
+    // if the the thread Succeeded
     if (!status) {
-        computeRoadT[tripInfo->getRideId()] = t1;
-        tc->addTI(tripInfo);
+        computeRoadT[tripInfo->getRideId()] = t1;   // add the thread to computeRoadT map
+        tc->addTI(tripInfo);                        // add the tripInfo to the taxi center
     } else {
         std::cout << "ComputeRoad fails" << endl;
     }
@@ -101,14 +108,20 @@ void SystemOperations::moveAll() {
     tc->moveAll();
 }
 
+/**
+ * ComputeRoad use the BFS to calculate the road of the ride.
+ * @param threadArgs is the struct with the argumrnts for the calculation
+ * @return
+ */
 void *SystemOperations::ComputeRoad(void *threadArgs) {
     ThreadArgs *args = (ThreadArgs *) threadArgs;
-    Node *start = new Node(args->ti->getStart());
-    Point *end = (args->ti->getDestination());
+    Node *start = new Node(args->ti->getStart());          // the start of the road
+    Point *end = (args->ti->getDestination());             // the end of the road
     CoordinatedItem *dest = args->grid->getCoordinatedItem(end->getX(), end->getY());
+    // use BFS algoritem
     std::list<CoordinatedItem *> *road = BFS::use(args->grid, start, dest);
     delete start;
-    args->ti->setRoad(road);
+    args->ti->setRoad(road);        // set the road in the Trip Info
     delete (args);
     cout << "finished calculating road" << endl;
 }

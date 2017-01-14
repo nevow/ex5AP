@@ -16,8 +16,8 @@ pthread_mutex_t grid_locker;
  * @return stack of CoordinatedItem represent the road
  */
 list<CoordinatedItem *> *BFS::use(Grid *Graph, CoordinatedItem *root, CoordinatedItem *dest) {
-    // spread the distances using the BFS algorithm
     pthread_mutex_lock(&grid_locker);           // lock the access to the BFS
+    // spread the distances using the BFS algorithm
     BFS::BFSAlgo(Graph, root);
     return (getTrip(dest));
 }
@@ -81,6 +81,5 @@ list<CoordinatedItem *> *BFS::getTrip(CoordinatedItem *dest) {
     road->pop_front();
     road->front()->setParent(NULL);
     pthread_mutex_unlock(&grid_locker);         // unlock the access to the BFS
-
     return road;
 }

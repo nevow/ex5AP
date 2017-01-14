@@ -63,12 +63,6 @@ public:
     void setDriverToTi(TripInfo *ti);
 
     void moveAll();
-
-    //void removeListener(EventListener *el);
-
-    //TripInfo *answerCall(Passenger *p);
-
-    //void sendTaxi(Driver *d);
 };
 
 
