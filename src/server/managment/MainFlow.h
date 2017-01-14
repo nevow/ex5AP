@@ -22,23 +22,24 @@ class MainFlow {
 private:
     SystemOperations *so;
     Socket *sock;
-    int port;
     list<Connection *> *connections;
     pthread_t connection_thread;
     map<int, Connection *> *conMap;
+    int *choice;
 public:
 
     MainFlow(int port);
 
     ~MainFlow() {
-        pthread_join(connection_thread, NULL);
         delete so;
         delete conMap;
         while (!(connections->empty())) {
             delete connections->front();
             connections->pop_front();
         }
+        delete connections;
         delete sock;
+        delete choice;
     }
 
     void input();

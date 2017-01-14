@@ -60,6 +60,7 @@ void *sendInfoToClient(void *data) {
             sleep(1);
         }
     } while (tempOption != 7);
+    delete td;
     return NULL;
 }
 
