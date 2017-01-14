@@ -54,8 +54,8 @@ int Tcp::initialize(int clientsNumber) {
         sin.sin_port = htons(this->port_number);
         bzero(&(sin.sin_zero), 8);
         //bind
-        if (bind(this->socketDescriptor,
-                 (struct sockaddr *) &sin, sizeof(sin)) < 0) {
+        if (::bind(this->socketDescriptor,
+                   (struct sockaddr *) &sin, sizeof(sin)) < 0) {
             //return an error represent error at this method
             return ERROR_BIND;
         }
