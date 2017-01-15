@@ -32,28 +32,14 @@ void DataSender<T>::sendData(Socket *sock, T *item, int descriptor) {
  */
 template<class T>
 T *DataSender<T>::receiveData(Socket *sock, int descriptor) {
-    char buffer[130000];
-    char tempBuffer[130000];
-    int flag = 0;
+    char buffer[70000];
+    sock->receiveData(buffer, sizeof(buffer), descriptor);
     T *item;
-    size_t j = 0;
-    do {
-        int bytes = sock->receiveData(buffer, sizeof(buffer), descriptor);
-        for (int i = 0; i < bytes; i++) {
-            tempBuffer[j] = buffer[i];
-            j++;
-        }
-        try {
-            {
-                boost::iostreams::basic_array_source<char> dev(tempBuffer, j);
-                boost::iostreams::stream<boost::iostreams::basic_array_source<char>> s2(dev);
-                boost::archive::binary_iarchive ia(s2);
-                ia >> item;
-            }
-            flag = 0;
-        } catch (...) {
-            flag = 1;
-        }
-    } while (flag);
+    {
+        boost::iostreams::basic_array_source<char> dev(buffer, sizeof(buffer));
+        boost::iostreams::stream<boost::iostreams::basic_array_source<char>> s2(dev);
+        boost::archive::binary_iarchive ia(s2);
+        ia >> item;
+    }
     return item;
 }
