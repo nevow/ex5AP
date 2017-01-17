@@ -37,18 +37,18 @@ int main(int argc, char *argv[]) {
 
     // deserialize the taxi from the server
     Taxi *cab = DataSender<Taxi>::receiveData(sock, 0); // wait to receive a cab from the server
-    driver->setCab(cab);                             // set the cab to the driver
+    driver->setCab(cab);                                // set the cab to the driver
 
     TripInfo *ti = NULL;
-    std::list<CoordinatedItem *> *tempRoad = NULL;   // to save the road of  the trip info
+    std::list<CoordinatedItem *> *tempRoad = NULL;      // to save the road of  the trip info
     // do while the server still sends orders different from the exit order "exit"
     do {
-        sock->receiveData(buffer, sizeof(buffer), 0); // wait to receive the orders from the server
-        sock->sendData("received", 0);
+        sock->receiveData(buffer, sizeof(buffer), 0);   // wait for the orders from the server
+        sock->sendData("received", 0);                  // send the massage for received
         if (!strcmp(buffer, "get_ready_for_trip_info")) {
             // deserialize the trip info from the server
             ti = DataSender<TripInfo>::receiveData(sock, 0);
-            sock->sendData("received", 0);
+            sock->sendData("received", 0);              // send confirmation for the trip info
             tempRoad = new list<CoordinatedItem *>;
             std::list<CoordinatedItem *> *road = ti->getRoad();
             // pass the coordinated items of the road to the tempRoad
@@ -57,13 +57,13 @@ int main(int argc, char *argv[]) {
                 tempRoad->push_back(*(iterator));
             }
 
-            driver->setTi(ti);                     // set the driver with the trip info
+            driver->setTi(ti);                           // set the driver with the trip info
         } else if (!strcmp(buffer, "9") && (ti != NULL)) {
-            driver->moveOneStep();                 // move the driver one step
+            driver->moveOneStep();                       // move the driver one step
 
             if (driver->getTi()->checkEnd(cab->getLocation()->getP())) { // if reached the end
-                delete ti;                         // delete the trip info
-                while (!tempRoad->empty()) {       // delete all the items of the tempRoad
+                delete ti;                               // delete the trip info
+                while (!tempRoad->empty()) {             // delete all the items of the tempRoad
                     delete tempRoad->front();
                     tempRoad->pop_front();
                 }

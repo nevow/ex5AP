@@ -21,16 +21,22 @@ Socket::Socket() {
 }
 
 /**
- * default destructor
+ * destructor.
  */
 Socket::~Socket() {
     close(this->socketDescriptor);
 }
 
+/**
+ * @return the Socket Descriptor
+ */
 int Socket::getSocketDescriptor() const {
     return socketDescriptor;
 }
 
+/**
+ * @return the Number Of Clients
+ */
 int Socket::getNumberOfClients() const {
     return numberOfClients;
 }

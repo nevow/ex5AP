@@ -13,20 +13,22 @@
 extern pthread_mutex_t global_validator_locker;
 
 class Connection {
+
 private:
+
     Socket *sock;
     pthread_t t;
     int *option;
     int descriptor;
+
 public:
+
     Connection(Socket *s, int dcc) : sock(s), descriptor(dcc), option(NULL) {};
 
     ~Connection() {
         pthread_join(t, NULL);
         pthread_mutex_destroy(&global_validator_locker);
     }
-
-    int getDcc();
 
     void setOption(int *status);
 

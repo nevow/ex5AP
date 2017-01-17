@@ -60,8 +60,6 @@ set(SOURCE_FILES
         src/server/sockets/Socket.h
         src/server/sockets/Tcp.cpp
         src/server/sockets/Tcp.h
-        src/server/sockets/Udp.cpp
-        src/server/sockets/Udp.h
 
         src/server/sockets/Connection.cpp
         src/server/sockets/Connection.h
